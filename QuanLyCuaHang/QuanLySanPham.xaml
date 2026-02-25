@@ -16,45 +16,39 @@
             <TextBlock Text="QUẢN LÍ SẢN PHẨM " FontWeight="Bold" FontSize="16" Margin="0,0,0,20" HorizontalAlignment="Center"/>
 
             <Label Content="Tên sản phẩm:"/>
-            <TextBox Padding="5" Margin="0,0,0,10"/>
+            <TextBox x:Name="txtTen" Padding="5" Margin="0,0,0,10"/>
 
             <Label Content="Loại sản phẩm:"/>
-            <ComboBox  Padding="5" Margin="0,0,0,10">
-                <ComboBoxItem Content="Điện tử"/>
-                <ComboBoxItem Content="Gia dụng"/>
-                <ComboBoxItem Content="Thời trang"/>
-            </ComboBox>
+            <ComboBox x:Name="cbLoai" IsEditable="True" Padding="5" Margin="0,0,0,10"/>
 
             <Label Content="Giá:"/>
             <TextBox x:Name="txtGia" Padding="5" Margin="0,0,0,10"/>
 
             <Label Content="Số lượng:"/>
-            <TextBox Padding="5" Margin="0,0,0,20"/>
+            <TextBox x:Name="txtSoLuong" Padding="5" Margin="0,0,0,20"/>
 
             <UniformGrid Columns="3">
-                <Button Content="Thêm" Margin="0,0,5,0" Padding="5"/>
-                <Button Content ="Sửa" Margin="2.5,0,2.5,0" Padding="5"/>
-                <Button Content="Xóa" Margin="5,0,0,0" Padding="5"/>
+                <Button x:Name="btnThem" Content="Thêm" Margin="0,0,5,0" Padding="5" Click="btnThem_Click"/>
+                <Button x:Name="btnSua" Content="Sửa" Margin="2.5,0,2.5,0" Padding="5" Click="btnSua_Click"/>
+                <Button x:Name="btnXoa" Content="Xóa" Margin="5,0,0,0" Padding="5" Click="btnXoa_Click"/>
             </UniformGrid>
         </StackPanel>
 
         <DockPanel Grid.Column="1" Margin="15">
-
             <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,0,0,10" HorizontalAlignment="Right">
                 <TextBlock Text="Tìm kiếm:" VerticalAlignment="Center" Margin="0,0,10,0"/>
-                <TextBox  Width="200" Padding="5"/>
+                <TextBox x:Name="txtTimKiem" Width="200" Padding="5" TextChanged="txtTimKiem_TextChanged"/>
             </StackPanel>
 
-            <DataGrid x:Name="dgDanhSach" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column">
+            <DataGrid x:Name="dgDanhSach" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column"
+                      SelectionChanged="dgDanhSach_SelectionChanged">
                 <DataGrid.Columns>
                     <DataGridTextColumn Header="Tên SP" Binding="{Binding TenSP}" Width="*"/>
-                    <DataGridTextColumn Header="Loại" Binding="{Binding LoaiSP}" Width="100"/>
-                    <DataGridTextColumn Header="Giá" Binding="{Binding Gia}" Width="100"/>
-                    <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" Width="80"/>
+                    <DataGridTextColumn Header="Loại" Binding="{Binding LoaiSP}" Width="120"/>
+                    <DataGridTextColumn Header="Giá" Binding="{Binding Gia}" Width="120"/>
+                    <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" Width="90"/>
                 </DataGrid.Columns>
             </DataGrid>
-
         </DockPanel>
-
     </Grid>
 </Window>

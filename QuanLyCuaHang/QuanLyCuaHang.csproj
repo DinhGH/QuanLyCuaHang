@@ -79,10 +79,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
-    <Page Include="Login.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Compile Include="bill.cs">
       <DependentUpon>QLCH.tt</DependentUpon>
     </Compile>
@@ -114,24 +110,6 @@
       <DesignTime>True</DesignTime>
       <DependentUpon>QLCH.edmx</DependentUpon>
     </Compile>
-    <Compile Include="QLCuaHang.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCuaHang.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCuaHang.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="QuanLyHoaDon.xaml.cs">
-      <DependentUpon>QuanLyHoaDon.xaml</DependentUpon>
-    </Compile>
     <Compile Include="stock_in.cs">
       <DependentUpon>QLCH.tt</DependentUpon>
     </Compile>
@@ -146,17 +124,10 @@
       <DependentUpon>App.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Login.xaml.cs">
-      <DependentUpon>Login.xaml</DependentUpon>
-    </Compile>
     <Compile Include="MainWindow.xaml.cs">
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
-    <Page Include="QuanLyHoaDon.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="QuanLySanPham.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -185,19 +156,12 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EntityDeploy Include="QLCuaHang.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>QLCuaHang.Designer.cs</LastGenOutput>
-    </EntityDeploy>
     <EntityDeploy Include="QLCH.edmx">
       <Generator>EntityModelCodeGenerator</Generator>
       <LastGenOutput>QLCH.Designer.cs</LastGenOutput>
     </EntityDeploy>
     <None Include="QLCH.edmx.diagram">
       <DependentUpon>QLCH.edmx</DependentUpon>
-    </None>
-    <None Include="QLCuaHang.edmx.diagram">
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -214,21 +178,11 @@
       <DependentUpon>QLCH.edmx</DependentUpon>
       <LastGenOutput>QLCH.cs</LastGenOutput>
     </Content>
-    <Content Include="QLCuaHang.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-      <LastGenOutput>QLCuaHang.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="QLCuaHang.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-      <LastGenOutput>QLCuaHang.cs</LastGenOutput>
-    </Content>
     <Content Include="QuanLyCuaHang.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="QuanLyCuaHang_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       <DependentUpon>QuanLyCuaHang.mdf</DependentUpon>
     </Content>
   </ItemGroup>
