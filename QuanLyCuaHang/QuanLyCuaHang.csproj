@@ -14,6 +14,7 @@
     <WarningLevel>4</WarningLevel>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
     <Deterministic>true</Deterministic>
+    <IsWebBootstrapper>false</IsWebBootstrapper>
     <PublishUrl>publish\</PublishUrl>
     <Install>true</Install>
     <InstallFrom>Disk</InstallFrom>
@@ -26,7 +27,6 @@
     <MapFileExtensions>true</MapFileExtensions>
     <ApplicationRevision>0</ApplicationRevision>
     <ApplicationVersion>1.0.0.%2a</ApplicationVersion>
-    <IsWebBootstrapper>false</IsWebBootstrapper>
     <UseApplicationTrust>false</UseApplicationTrust>
     <BootstrapperEnabled>true</BootstrapperEnabled>
   </PropertyGroup>
@@ -83,57 +83,9 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Compile Include="bill.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
-    <Compile Include="bill_items.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
-    <Compile Include="customer.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
-    <Compile Include="employee.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
     <Compile Include="HoaDon.cs" />
-    <Compile Include="product.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCH.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCH.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCH.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCH.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCH.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCH.edmx</DependentUpon>
-    </Compile>
-    <Compile Include="QLCuaHang.Context.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.Context.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCuaHang.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.tt</DependentUpon>
-    </Compile>
-    <Compile Include="QLCuaHang.Designer.cs">
-      <AutoGen>True</AutoGen>
-      <DesignTime>True</DesignTime>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-    </Compile>
     <Compile Include="QuanLyHoaDon.xaml.cs">
       <DependentUpon>QuanLyHoaDon.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="stock_in.cs">
-      <DependentUpon>QLCH.tt</DependentUpon>
     </Compile>
     <Compile Include="QuanLySanPham.xaml.cs">
       <DependentUpon>QuanLySanPham.xaml</DependentUpon>
@@ -185,52 +137,9 @@
       <Generator>SettingsSingleFileGenerator</Generator>
       <LastGenOutput>Settings.Designer.cs</LastGenOutput>
     </None>
-    <EntityDeploy Include="QLCuaHang.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>QLCuaHang.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <EntityDeploy Include="QLCH.edmx">
-      <Generator>EntityModelCodeGenerator</Generator>
-      <LastGenOutput>QLCH.Designer.cs</LastGenOutput>
-    </EntityDeploy>
-    <None Include="QLCH.edmx.diagram">
-      <DependentUpon>QLCH.edmx</DependentUpon>
-    </None>
-    <None Include="QLCuaHang.edmx.diagram">
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="QLCH.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCH.edmx</DependentUpon>
-      <LastGenOutput>QLCH.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="QLCH.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCH.edmx</DependentUpon>
-      <LastGenOutput>QLCH.cs</LastGenOutput>
-    </Content>
-    <Content Include="QLCuaHang.Context.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-      <LastGenOutput>QLCuaHang.Context.cs</LastGenOutput>
-    </Content>
-    <Content Include="QLCuaHang.tt">
-      <Generator>TextTemplatingFileGenerator</Generator>
-      <DependentUpon>QLCuaHang.edmx</DependentUpon>
-      <LastGenOutput>QLCuaHang.cs</LastGenOutput>
-    </Content>
-    <Content Include="QuanLyCuaHang.mdf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </Content>
-    <Content Include="QuanLyCuaHang_log.ldf">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-      <DependentUpon>QuanLyCuaHang.mdf</DependentUpon>
-    </Content>
   </ItemGroup>
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.7.2">
@@ -246,6 +155,15 @@
   </ItemGroup>
   <ItemGroup>
     <Service Include="{508349B6-6B84-4DF5-91F0-309BEEBAD82D}" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="QLCHDB.mdf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="QLCHDB_log.ldf">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+      <DependentUpon>QLCHDB.mdf</DependentUpon>
+    </Content>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
