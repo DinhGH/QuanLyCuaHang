@@ -58,6 +58,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.ComponentModel.DataAnnotations" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Runtime.Serialization" />
     <Reference Include="System.Security" />
@@ -79,6 +80,12 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </ApplicationDefinition>
+    <Compile Include="ChiTietHoaDon.cs" />
+    <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="SanPham.cs" />
+    <Compile Include="ThanhToan.xaml.cs">
+      <DependentUpon>ThanhToan.xaml</DependentUpon>
+    </Compile>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -111,6 +118,9 @@
     </Page>
     <Page Include="QuanLySanPham.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="ThanhToan.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
