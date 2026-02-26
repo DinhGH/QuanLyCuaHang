@@ -6,7 +6,7 @@
         xmlns:local="clr-namespace:QuanLyCuaHang"
         mc:Ignorable="d"
         Title="Login" Height="450" Width="800">
-    <Grid>
+    <Grid Background="#F5F5F5">
         <Border Width="420" Padding="30" Background="White" CornerRadius="15" VerticalAlignment="Center" HorizontalAlignment="Center">
             <Border.Effect>
                 <DropShadowEffect BlurRadius="15" ShadowDepth="0" Opacity="0.2"/>
@@ -24,23 +24,32 @@
                     <RowDefinition Height="Auto"/>
                 </Grid.RowDefinitions>
 
-                <TextBlock Grid.Row="0" Text="ĐĂNG NHẬP" FontSize="30" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,0,0,25"/>
+                <TextBlock Grid.Row="0" Text="LOGIN" FontSize="30" FontWeight="Bold" Foreground="#2C3E50" HorizontalAlignment="Center" Margin="0,0,0,25"/>
 
-                <TextBlock Grid.Row="1" Text="Tên đăng nhập" FontSize="14" Foreground="#34495E" Margin="0,0,0,5"/>
+                <TextBlock Grid.Row="1" Text="Email" FontSize="14" Foreground="#34495E" Margin="0,0,0,5"/>
 
                 <Border Grid.Row="2" CornerRadius="8" BorderBrush="#D0D3D4" BorderThickness="1" Margin="0,0,0,10">
                     <TextBox x:Name="txtUsername" Height="40" FontSize="14" Padding="10" BorderThickness="0" Background="Transparent"/>
                 </Border>
 
-                <TextBlock Grid.Row="3" Text="Mật khẩu" FontSize="14" Foreground="#34495E" Margin="0,5,0,5"/>
+                <TextBlock Grid.Row="3" Text="Password" FontSize="14" Foreground="#34495E" Margin="0,5,0,5"/>
 
-                <Border Grid.Row="4" CornerRadius="8" BorderBrush="#D0D3D4" BorderThickness="1">
-                    <PasswordBox x:Name="txtPassword" Height="40" FontSize="14" Padding="10" BorderThickness="0" Background="Transparent"/>
-                </Border>
+                <Grid Grid.Row="4" Margin="0,0,0,10">
+                    <Border CornerRadius="8" BorderBrush="#D0D3D4" BorderThickness="1">
+                        <Grid>
+                            <PasswordBox x:Name="txtPassword" Height="40" FontSize="14" Padding="10,8,40,8" BorderThickness="0" Background="Transparent"/>
+                            <TextBox x:Name="txtPasswordVisible" Height="40" FontSize="14" Padding="10,8,40,8" BorderThickness="0" Background="Transparent" Visibility="Collapsed"/>
+                            
+                            <Button x:Name="btnTogglePassword" Width="30" Height="30" HorizontalAlignment="Right" VerticalAlignment="Center" Margin="5,0,5,0" Background="Transparent" BorderThickness="0" Cursor="Hand">
+                                <TextBlock x:Name="eyeIcon" Text="👁" FontSize="16"/>
+                            </Button>
+                        </Grid>
+                    </Border>
+                </Grid>
 
-                <TextBlock x:Name="lblError" Grid.Row="5" Foreground="Red" FontSize="12" Margin="0,10,0,0" HorizontalAlignment="Center" Visibility="Collapsed"/>
+                <TextBlock x:Name="lblError" Grid.Row="5" Foreground="Red" FontSize="12" Margin="0,10,0,0" HorizontalAlignment="Center" Visibility="Collapsed" TextWrapping="Wrap"/>
 
-                <Button x:Name="btnLogin" Grid.Row="6" Content="ĐĂNG NHẬP" Height="45" Margin="0,25,0,10" FontSize="16" FontWeight="Bold" Background="#3498DB" Foreground="White" BorderThickness="0" Cursor="Hand">
+                <Button x:Name="btnLogin" Grid.Row="6" Content="LOGIN" Height="45" Margin="0,25,0,10" FontSize="16" FontWeight="Bold" Background="#3498DB" Foreground="White" BorderThickness="0" Cursor="Hand">
                     <Button.Style>
                         <Style TargetType="Button">
                             <Setter Property="Template">
