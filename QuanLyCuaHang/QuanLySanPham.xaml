@@ -47,10 +47,13 @@
 
             <DataGrid x:Name="dgDanhSach" AutoGenerateColumns="False" CanUserAddRows="False" IsReadOnly="True" HeadersVisibility="Column">
                 <DataGrid.Columns>
-                    <DataGridTextColumn Header="Tên SP" Binding="{Binding TenSP}" Width="*"/>
-                    <DataGridTextColumn Header="Loại" Binding="{Binding LoaiSP}" Width="100"/>
-                    <DataGridTextColumn Header="Giá" Binding="{Binding Gia}" Width="100"/>
-                    <DataGridTextColumn Header="Số lượng" Binding="{Binding SoLuong}" Width="80"/>
+                    <DataGridTextColumn Header="ID" Binding="{Binding id}" Width="60"/>
+                    <DataGridTextColumn Header="Tên SP" Binding="{Binding name}" Width="180"/>
+                    <DataGridTextColumn Header="Giá" Binding="{Binding price}" Width="100"/>
+                    <DataGridTextColumn Header="Số lượng" Binding="{Binding quantity}" Width="90"/>
+                    <DataGridTextColumn Header="Đơn vị" Binding="{Binding unit}" Width="90"/>
+                    <DataGridTextColumn Header="Mô tả" Binding="{Binding description}" Width="*"/>
+                    <DataGridTextColumn Header="Ngày tạo" Binding="{Binding created_at, StringFormat=dd/MM/yyyy HH:mm}" Width="140"/>
                 </DataGrid.Columns>
             </DataGrid>
 
