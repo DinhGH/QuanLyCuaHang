@@ -26,17 +26,17 @@ namespace QuanLyCuaHang
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi t?i danh sách s?n ph?m: " + ex.Message, "L?i", 
+                MessageBox.Show("Loi khi tai danh sach san pham: " + ex.Message, "Loi", 
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnThemSanPham_Click(object sender, RoutedEventArgs e)
         {
-            // T?o window ch?n s?n ph?m
+            // Tao window chon san pham
             var windowChonSP = new Window
             {
-                Title = "Ch?n S?n Ph?m",
+                Title = "Chon San Pham",
                 Width = 500,
                 Height = 400,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
@@ -47,9 +47,11 @@ namespace QuanLyCuaHang
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
+            // Tao ListView voi template tu code
             var listView = new ListView { Margin = new Thickness(0, 0, 0, 10) };
-            listView.ItemTemplate = (DataTemplate)this.FindResource("SanPhamItemTemplate") ?? CreateSanPhamTemplate();
+            listView.ItemTemplate = CreateSanPhamTemplate();
             listView.ItemsSource = danhSachSanPham;
+            
             listView.MouseDoubleClick += (s, args) =>
             {
                 if (listView.SelectedItem is SanPham sp)
@@ -61,7 +63,7 @@ namespace QuanLyCuaHang
 
             var btnChon = new Button
             {
-                Content = "Ch?n",
+                Content = "Chon",
                 Width = 100,
                 Height = 35,
                 HorizontalAlignment = HorizontalAlignment.Right
@@ -72,6 +74,11 @@ namespace QuanLyCuaHang
                 {
                     ThemSanPhamVaoGio(sp);
                     windowChonSP.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Vui long chon san pham!", "Thong bao", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             };
 
@@ -88,18 +95,28 @@ namespace QuanLyCuaHang
         {
             var template = new DataTemplate();
             var factory = new FrameworkElementFactory(typeof(StackPanel));
+            factory.SetValue(StackPanel.MarginProperty, new Thickness(5));
             
             var txtTen = new FrameworkElementFactory(typeof(TextBlock));
             txtTen.SetValue(TextBlock.FontWeightProperty, System.Windows.FontWeights.SemiBold);
+            txtTen.SetValue(TextBlock.FontSizeProperty, 14.0);
             txtTen.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("TenSP"));
             
             var txtGia = new FrameworkElementFactory(typeof(TextBlock));
             txtGia.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Gray);
+            txtGia.SetValue(TextBlock.FontSizeProperty, 12.0);
             txtGia.SetBinding(TextBlock.TextProperty, 
-                new System.Windows.Data.Binding("GiaBan") { StringFormat = "Giá: {0:N0} VN?" });
+                new System.Windows.Data.Binding("GiaBan") { StringFormat = "Gia: {0:N0} VND" });
+            
+            var txtSoLuong = new FrameworkElementFactory(typeof(TextBlock));
+            txtSoLuong.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.DarkGreen);
+            txtSoLuong.SetValue(TextBlock.FontSizeProperty, 11.0);
+            txtSoLuong.SetBinding(TextBlock.TextProperty, 
+                new System.Windows.Data.Binding("SoLuongTon") { StringFormat = "Ton kho: {0}" });
             
             factory.AppendChild(txtTen);
             factory.AppendChild(txtGia);
+            factory.AppendChild(txtSoLuong);
             template.VisualTree = factory;
             
             return template;
@@ -212,7 +229,7 @@ namespace QuanLyCuaHang
         {
             if (danhSachMuaHang.Count == 0)
             {
-                MessageBox.Show("Vui lòng thêm s?n ph?m vào gi? hàng!", "Thông báo", 
+                MessageBox.Show("Vui long them san pham vao gio hang!", "Thong bao", 
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
@@ -222,7 +239,7 @@ namespace QuanLyCuaHang
                 if (string.IsNullOrWhiteSpace(txtTienKhachDua.Text) || 
                     !decimal.TryParse(txtTienKhachDua.Text.Replace(",", ""), out decimal tienKhachDua))
                 {
-                    MessageBox.Show("Vui lòng nh?p ti?n khách ??a!", "Thông báo", 
+                    MessageBox.Show("Vui long nhap tien khach dua!", "Thong bao", 
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
@@ -231,7 +248,7 @@ namespace QuanLyCuaHang
                 {
                     if (tienKhachDua < tongTien)
                     {
-                        MessageBox.Show("Ti?n khách ??a không ??!", "Thông báo", 
+                        MessageBox.Show("Tien khach dua khong du!", "Thong bao", 
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
@@ -240,27 +257,27 @@ namespace QuanLyCuaHang
 
             try
             {
-                // T?o hóa ??n
+                // Tao hoa don
                 HoaDon hoaDon = new HoaDon
                 {
                     MaHoaDon = DatabaseHelper.TaoMaHoaDon(),
-                    KhachHang = string.IsNullOrWhiteSpace(txtHoTen.Text) ? "Khách l?" : txtHoTen.Text,
+                    KhachHang = string.IsNullOrWhiteSpace(txtHoTen.Text) ? "Khach le" : txtHoTen.Text,
                     SoDienThoai = txtSDT.Text,
                     DiaChi = txtDiaChi.Text,
                     NgayLap = DateTime.Now,
                     TongTien = double.Parse(txtTongTien.Text.Replace(",", "")),
-                    HinhThucThanhToan = rdTienMat.IsChecked == true ? "Ti?n m?t" : "Chuy?n kho?n",
+                    HinhThucThanhToan = rdTienMat.IsChecked == true ? "Tien mat" : "Chuyen khoan",
                     TienKhachDua = string.IsNullOrWhiteSpace(txtTienKhachDua.Text) ? 0 : 
                         double.Parse(txtTienKhachDua.Text.Replace(",", "")),
                     TienThua = double.Parse(txtTienThua.Text.Replace(",", ""))
                 };
 
-                // L?u vào database
+                // Luu vao database
                 int maHD = DatabaseHelper.LuuHoaDon(hoaDon);
                 DatabaseHelper.LuuChiTietHoaDon(maHD, danhSachMuaHang);
 
-                MessageBox.Show($"Xu?t hóa ??n thành công!\nMã hóa ??n: {hoaDon.MaHoaDon}", 
-                    "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Xuat hoa don thanh cong!\nMa hoa don: {hoaDon.MaHoaDon}", 
+                    "Thanh cong", MessageBoxButton.OK, MessageBoxImage.Information);
 
                 // Reset form
                 danhSachMuaHang.Clear();
@@ -274,7 +291,7 @@ namespace QuanLyCuaHang
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi xu?t hóa ??n: " + ex.Message, "L?i", 
+                MessageBox.Show("Loi khi xuat hoa don: " + ex.Message, "Loi", 
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

@@ -1,11 +1,7 @@
 using System;
 using System.Collections.Generic;
-using System.Data;
 using System.Data.SqlClient;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuanLyCuaHang
 {
@@ -13,10 +9,8 @@ namespace QuanLyCuaHang
     {
         private static string GetConnectionString()
         {
-            // L?y connection string t? App.config
             string connStr = ConfigurationManager.ConnectionStrings["QuanLyCuaHangEntities1"]?.ConnectionString;
             
-            // Parse Entity Framework connection string ?? l?y provider connection string
             if (!string.IsNullOrEmpty(connStr) && connStr.Contains("provider connection string"))
             {
                 int startIndex = connStr.IndexOf("provider connection string=\"") + 28;
@@ -26,7 +20,6 @@ namespace QuanLyCuaHang
             }
             else
             {
-                // Fallback connection string
                 connStr = @"Data Source=(LocalDB)\MSSQLLocalDB;AttachDbFilename=|DataDirectory|\QLCHDB.mdf;Integrated Security=True;Connect Timeout=30";
             }
             
@@ -39,7 +32,7 @@ namespace QuanLyCuaHang
             return new SqlConnection(connectionString);
         }
 
-        // L?y danh sách s?n ph?m
+        // Lay danh sach san pham
         public static List<SanPham> GetAllSanPham()
         {
             List<SanPham> dsSanPham = new List<SanPham>();
@@ -49,7 +42,7 @@ namespace QuanLyCuaHang
                 try
                 {
                     conn.Open();
-                    string query = "SELECT MaSP, TenSP, GiaBan, SoLuongTon, DonViTinh FROM SanPham WHERE SoLuongTon > 0";
+                    string query = "SELECT id, name, price, quantity, unit FROM products WHERE quantity > 0 ORDER BY name";
                     
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -72,94 +65,14 @@ namespace QuanLyCuaHang
                 }
                 catch (Exception ex)
                 {
-                    throw new Exception("L?i khi l?y danh sách s?n ph?m: " + ex.Message);
+                    throw new Exception("Loi khi lay danh sach san pham: " + ex.Message + "\nConnectionString: " + GetConnectionString());
                 }
             }
             
             return dsSanPham;
         }
 
-        // L?u hóa ??n
-        public static int LuuHoaDon(HoaDon hoaDon)
-        {
-            int maHD = 0;
-            
-            using (SqlConnection conn = GetConnection())
-            {
-                try
-                {
-                    conn.Open();
-                    string query = @"INSERT INTO HoaDon (MaHoaDon, KhachHang, SoDienThoai, DiaChi, NgayLap, TongTien, HinhThucThanhToan, TienKhachDua, TienThua) 
-                                   VALUES (@MaHoaDon, @KhachHang, @SoDienThoai, @DiaChi, @NgayLap, @TongTien, @HinhThucThanhToan, @TienKhachDua, @TienThua);
-                                   SELECT CAST(SCOPE_IDENTITY() AS INT)";
-                    
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
-                    {
-                        cmd.Parameters.AddWithValue("@MaHoaDon", hoaDon.MaHoaDon);
-                        cmd.Parameters.AddWithValue("@KhachHang", hoaDon.KhachHang ?? "Khách l?");
-                        cmd.Parameters.AddWithValue("@SoDienThoai", hoaDon.SoDienThoai ?? "");
-                        cmd.Parameters.AddWithValue("@DiaChi", hoaDon.DiaChi ?? "");
-                        cmd.Parameters.AddWithValue("@NgayLap", hoaDon.NgayLap);
-                        cmd.Parameters.AddWithValue("@TongTien", hoaDon.TongTien);
-                        cmd.Parameters.AddWithValue("@HinhThucThanhToan", hoaDon.HinhThucThanhToan ?? "Ti?n m?t");
-                        cmd.Parameters.AddWithValue("@TienKhachDua", hoaDon.TienKhachDua);
-                        cmd.Parameters.AddWithValue("@TienThua", hoaDon.TienThua);
-                        
-                        maHD = (int)cmd.ExecuteScalar();
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("L?i khi l?u hóa ??n: " + ex.Message);
-                }
-            }
-            
-            return maHD;
-        }
-
-        // L?u chi ti?t hóa ??n
-        public static void LuuChiTietHoaDon(int maHD, List<ChiTietHoaDon> dsChiTiet)
-        {
-            using (SqlConnection conn = GetConnection())
-            {
-                try
-                {
-                    conn.Open();
-                    
-                    foreach (var item in dsChiTiet)
-                    {
-                        string query = @"INSERT INTO ChiTietHoaDon (MaHD, MaSP, SoLuong, DonGia, ThanhTien) 
-                                       VALUES (@MaHD, @MaSP, @SoLuong, @DonGia, @ThanhTien)";
-                        
-                        using (SqlCommand cmd = new SqlCommand(query, conn))
-                        {
-                            cmd.Parameters.AddWithValue("@MaHD", maHD);
-                            cmd.Parameters.AddWithValue("@MaSP", item.MaSP);
-                            cmd.Parameters.AddWithValue("@SoLuong", item.SoLuong);
-                            cmd.Parameters.AddWithValue("@DonGia", item.DonGia);
-                            cmd.Parameters.AddWithValue("@ThanhTien", item.ThanhTien);
-                            
-                            cmd.ExecuteNonQuery();
-                        }
-                        
-                        // C?p nh?t s? l??ng t?n kho
-                        string updateQuery = "UPDATE SanPham SET SoLuongTon = SoLuongTon - @SoLuong WHERE MaSP = @MaSP";
-                        using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
-                        {
-                            cmdUpdate.Parameters.AddWithValue("@SoLuong", item.SoLuong);
-                            cmdUpdate.Parameters.AddWithValue("@MaSP", item.MaSP);
-                            cmdUpdate.ExecuteNonQuery();
-                        }
-                    }
-                }
-                catch (Exception ex)
-                {
-                    throw new Exception("L?i khi l?u chi ti?t hóa ??n: " + ex.Message);
-                }
-            }
-        }
-
-        // T?o mã hóa ??n t? ??ng
+        // Tao ma hoa don tu dong
         public static string TaoMaHoaDon()
         {
             using (SqlConnection conn = GetConnection())
@@ -167,7 +80,7 @@ namespace QuanLyCuaHang
                 try
                 {
                     conn.Open();
-                    string query = "SELECT COUNT(*) FROM HoaDon";
+                    string query = "SELECT COUNT(*) FROM bills";
                     
                     using (SqlCommand cmd = new SqlCommand(query, conn))
                     {
@@ -178,6 +91,115 @@ namespace QuanLyCuaHang
                 catch
                 {
                     return "HD" + DateTime.Now.ToString("yyyyMMddHHmmss");
+                }
+            }
+        }
+
+        // Luu hoa don
+        public static int LuuHoaDon(HoaDon hoaDon)
+        {
+            int maHD = 0;
+            
+            using (SqlConnection conn = GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    
+                    // Tim hoac tao customer
+                    int? customerId = null;
+                    if (!string.IsNullOrEmpty(hoaDon.SoDienThoai))
+                    {
+                        string queryCustomer = "SELECT id FROM customers WHERE phone = @Phone";
+                        using (SqlCommand cmdCustomer = new SqlCommand(queryCustomer, conn))
+                        {
+                            cmdCustomer.Parameters.AddWithValue("@Phone", hoaDon.SoDienThoai);
+                            var result = cmdCustomer.ExecuteScalar();
+                            if (result != null)
+                            {
+                                customerId = (int)result;
+                            }
+                            else
+                            {
+                                // Tao customer moi
+                                string insertCustomer = @"INSERT INTO customers (full_name, phone, email, address, created_at) 
+                                                        VALUES (@FullName, @Phone, @Email, @Address, @CreatedAt);
+                                                        SELECT CAST(SCOPE_IDENTITY() AS INT)";
+                                using (SqlCommand cmdInsertCustomer = new SqlCommand(insertCustomer, conn))
+                                {
+                                    cmdInsertCustomer.Parameters.AddWithValue("@FullName", hoaDon.KhachHang ?? "Khach le");
+                                    cmdInsertCustomer.Parameters.AddWithValue("@Phone", hoaDon.SoDienThoai ?? "");
+                                    cmdInsertCustomer.Parameters.AddWithValue("@Email", "");
+                                    cmdInsertCustomer.Parameters.AddWithValue("@Address", hoaDon.DiaChi ?? "");
+                                    cmdInsertCustomer.Parameters.AddWithValue("@CreatedAt", DateTime.Now);
+                                    customerId = (int)cmdInsertCustomer.ExecuteScalar();
+                                }
+                            }
+                        }
+                    }
+                    
+                    // Luu hoa don
+                    string query = @"INSERT INTO bills (customer_id, employee_id, total_amount, bill_date) 
+                                   VALUES (@CustomerId, @EmployeeId, @TotalAmount, @BillDate);
+                                   SELECT CAST(SCOPE_IDENTITY() AS INT)";
+                    
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@CustomerId", customerId.HasValue ? (object)customerId.Value : DBNull.Value);
+                        cmd.Parameters.AddWithValue("@EmployeeId", 1);
+                        cmd.Parameters.AddWithValue("@TotalAmount", hoaDon.TongTien);
+                        cmd.Parameters.AddWithValue("@BillDate", hoaDon.NgayLap);
+                        
+                        maHD = (int)cmd.ExecuteScalar();
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Loi khi luu hoa don: " + ex.Message);
+                }
+            }
+            
+            return maHD;
+        }
+
+        // Luu chi tiet hoa don
+        public static void LuuChiTietHoaDon(int maHD, List<ChiTietHoaDon> dsChiTiet)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    
+                    foreach (var item in dsChiTiet)
+                    {
+                        // Luu chi tiet
+                        string query = @"INSERT INTO bill_items (bill_id, product_id, quantity, price) 
+                                       VALUES (@BillId, @ProductId, @Quantity, @Price)";
+                        
+                        using (SqlCommand cmd = new SqlCommand(query, conn))
+                        {
+                            cmd.Parameters.AddWithValue("@BillId", maHD);
+                            cmd.Parameters.AddWithValue("@ProductId", item.MaSP);
+                            cmd.Parameters.AddWithValue("@Quantity", item.SoLuong);
+                            cmd.Parameters.AddWithValue("@Price", item.DonGia);
+                            
+                            cmd.ExecuteNonQuery();
+                        }
+                        
+                        // Cap nhat ton kho
+                        string updateQuery = "UPDATE products SET quantity = quantity - @Quantity WHERE id = @ProductId";
+                        using (SqlCommand cmdUpdate = new SqlCommand(updateQuery, conn))
+                        {
+                            cmdUpdate.Parameters.AddWithValue("@Quantity", item.SoLuong);
+                            cmdUpdate.Parameters.AddWithValue("@ProductId", item.MaSP);
+                            cmdUpdate.ExecuteNonQuery();
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Loi khi luu chi tiet hoa don: " + ex.Message);
                 }
             }
         }
