@@ -181,5 +181,50 @@ namespace QuanLyCuaHang
                 }
             }
         }
+
+        // Them vao class DatabaseHelper
+        public static Employee ValidateLogin(string username, string password)
+        {
+            using (SqlConnection conn = GetConnection())
+            {
+                try
+                {
+                    conn.Open();
+                    // Simple validation - trong thuc te nen ma hoa password
+                    string query = @"SELECT id, full_name, phone, email, role, salary, created_at 
+                           FROM employees 
+                           WHERE email = @Username AND phone = @Password";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.Parameters.AddWithValue("@Username", username);
+                        cmd.Parameters.AddWithValue("@Password", password);
+
+                        using (SqlDataReader reader = cmd.ExecuteReader())
+                        {
+                            if (reader.Read())
+                            {
+                                return new Employee
+                                {
+                                    Id = reader.GetInt32(0),
+                                    FullName = reader.GetString(1),
+                                    Phone = reader.IsDBNull(2) ? "" : reader.GetString(2),
+                                    Email = reader.IsDBNull(3) ? "" : reader.GetString(3),
+                                    Role = reader.IsDBNull(4) ? "" : reader.GetString(4),
+                                    Salary = reader.IsDBNull(5) ? 0 : reader.GetDecimal(5),
+                                    CreatedAt = reader.IsDBNull(6) ? DateTime.Now : reader.GetDateTime(6)
+                                };
+                            }
+                        }
+                    }
+                }
+                catch (Exception ex)
+                {
+                    throw new Exception("Login validation error: " + ex.Message);
+                }
+            }
+
+            return null;
+        }
     }
 }

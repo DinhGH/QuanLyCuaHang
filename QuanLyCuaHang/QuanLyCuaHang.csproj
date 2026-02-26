@@ -82,6 +82,7 @@
     </ApplicationDefinition>
     <Compile Include="ChiTietHoaDon.cs" />
     <Compile Include="DatabaseHelper.cs" />
+    <Compile Include="Employee.cs" />
     <Compile Include="SanPham.cs" />
     <Compile Include="ThanhToan.xaml.cs">
       <DependentUpon>ThanhToan.xaml</DependentUpon>
