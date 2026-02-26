@@ -24,6 +24,7 @@ namespace QuanLyCuaHang
         {
         }
 
+        }
         public HoaDon(int stt, string maHoaDon, string khachHang, DateTime ngayLap, double tongTien)
         {
             this.stt = stt;
@@ -34,15 +35,9 @@ namespace QuanLyCuaHang
         }
 
         public int Stt { get => stt; set => stt = value; }
-        public int MaHD { get => maHD; set => maHD = value; }
         public string MaHoaDon { get => maHoaDon; set => maHoaDon = value; }
         public string KhachHang { get => khachHang; set => khachHang = value; }
-        public string SoDienThoai { get => soDienThoai; set => soDienThoai = value; }
-        public string DiaChi { get => diaChi; set => diaChi = value; }
         public DateTime NgayLap { get => ngayLap; set => ngayLap = value; }
         public double TongTien { get => tongTien; set => tongTien = value; }
-        public string HinhThucThanhToan { get => hinhThucThanhToan; set => hinhThucThanhToan = value; }
-        public double TienKhachDua { get => tienKhachDua; set => tienKhachDua = value; }
-        public double TienThua { get => tienThua; set => tienThua = value; }
     }
 }
