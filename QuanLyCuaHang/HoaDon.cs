@@ -8,16 +8,17 @@ namespace QuanLyCuaHang
 {
     internal class HoaDon
     {
+        int id;
         int stt;
         string maHoaDon, khachHang;
-        DateTime ngayLap;
-        double tongTien;
+        DateTime? ngayLap;
+        decimal tongTien;
 
         public HoaDon()
         {
 
         }
-        public HoaDon(int stt, string maHoaDon, string khachHang, DateTime ngayLap, double tongTien)
+        public HoaDon(int stt, string maHoaDon, string khachHang, DateTime? ngayLap, decimal tongTien)
         {
             this.stt = stt;
             this.maHoaDon = maHoaDon;
@@ -27,9 +28,10 @@ namespace QuanLyCuaHang
         }
 
         public int Stt { get => stt; set => stt = value; }
+        public int Id { get => id; set => id = value; }
         public string MaHoaDon { get => maHoaDon; set => maHoaDon = value; }
         public string KhachHang { get => khachHang; set => khachHang = value; }
-        public DateTime NgayLap { get => ngayLap; set => ngayLap = value; }
-        public double TongTien { get => tongTien; set => tongTien = value; }
+        public DateTime? NgayLap { get => ngayLap; set => ngayLap = value; }
+        public decimal TongTien { get => tongTien; set => tongTien = value; }
     }
 }
