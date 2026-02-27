@@ -23,7 +23,7 @@
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"
                            Margin="0,0,0,20"/>
-
+    
 				<TextBlock Text="Tên đăng nhập"/>
 				<TextBox x:Name="txtUsername"
                          Height="32"

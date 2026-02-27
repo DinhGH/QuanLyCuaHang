@@ -24,7 +24,6 @@ namespace QuanLyCuaHang
         {
         }
 
-        }
         public HoaDon(int stt, string maHoaDon, string khachHang, DateTime ngayLap, double tongTien)
         {
             this.stt = stt;

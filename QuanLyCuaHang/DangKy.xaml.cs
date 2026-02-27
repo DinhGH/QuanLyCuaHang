@@ -1,22 +1,13 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
-using System.Threading.Tasks;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Shapes;
+using QuanLyCuaHang.Models;
 
 namespace QuanLyCuaHang
 {
-    /// <summary>
-    /// Interaction logic for DangKy.xaml
-    /// </summary>
     public partial class DangKy : Window
     {
         public DangKy()
@@ -24,16 +15,91 @@ namespace QuanLyCuaHang
             InitializeComponent();
         }
 
-        // Nút Đăng ký
+        // ===== CLICK ĐĂNG KÝ =====
         private void BtnDangKy_Click(object sender, RoutedEventArgs e)
         {
-            MessageBox.Show("Đăng ký thành công (demo)!");
+            string email = txtUsername.Text.Trim();
+            string password = txtPassword.Password;
+            string confirmPassword = txtConfirmPassword.Password;
+            string role = (cbRole.SelectedItem as System.Windows.Controls.ComboBoxItem)?.Content.ToString();
+
+            // 1️⃣ Validate
+            if (string.IsNullOrEmpty(email) ||
+                string.IsNullOrEmpty(password) ||
+                string.IsNullOrEmpty(confirmPassword) ||
+                string.IsNullOrEmpty(role))
+            {
+                MessageBox.Show("Vui lòng nhập đầy đủ thông tin!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            if (password != confirmPassword)
+            {
+                MessageBox.Show("Mật khẩu xác nhận không khớp!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
+            try
+            {
+                using (var db = new QLCHDBEntities()) // TÊN CONTEXT EF
+                {
+                    // 2️⃣ Check trùng email
+                    bool exists = db.Users.Any(u => u.email == email);
+                    if (exists)
+                    {
+                        MessageBox.Show("Email đã tồn tại!", "Lỗi", MessageBoxButton.OK, MessageBoxImage.Error);
+                        return;
+                    }
+
+                    // 3️⃣ Tạo user mới
+                    User user = new User
+                    {
+                        email = email,
+                        password = HashPassword(password),
+                        role = role,
+                        full_name = email, // tạm, có thể chỉnh sau
+                        salary = 0,
+                        created_at = DateTime.Now
+                    };
+
+                    db.Users.Add(user);
+                    db.SaveChanges();
+                }
+
+                MessageBox.Show("Đăng ký thành công!", "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+
+                // 4️⃣ Quay về Login
+                Login login = new Login();
+                login.Show();
+                this.Close();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi hệ thống:\n" + ex.Message, "Error", MessageBoxButton.OK, MessageBoxImage.Error);
+            }
         }
 
-        // Nút Quay lại đăng nhập
-        private void BtnQuayLai_Click(object sender, RoutedEventArgs e)
+        // ===== HASH PASSWORD =====
+        private string HashPassword(string password)
         {
-            this.Close(); // đóng cửa sổ đăng ký
+            using (SHA256 sha = SHA256.Create())
+            {
+                byte[] bytes = sha.ComputeHash(Encoding.UTF8.GetBytes(password));
+                StringBuilder sb = new StringBuilder();
+                foreach (byte b in bytes)
+                    sb.Append(b.ToString("x2"));
+                return sb.ToString();
+            }
         }
+
+        // ===== BACK TO LOGIN =====
+        private void TxtBackToLogin_MouseDown(object sender, MouseButtonEventArgs e)
+        {
+            Login login = new Login();
+            login.Show();
+            this.Close();
+        }
+
+
     }
 }
