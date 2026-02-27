@@ -1,66 +1,102 @@
 ﻿<Window x:Class="QuanLyCuaHang.DangKy"
         xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Đăng ký"
-        Height="520"
+        Title="Register - Store Management System"
+        Height="560"
         Width="420"
         WindowStartupLocation="CenterScreen"
-        ResizeMode="NoResize">
+        ResizeMode="NoResize"
+        Background="#EEF1F4">
 
-	<Grid Background="#F4F6F8">
-		<Border Width="340"
-                Padding="25"
-                CornerRadius="10"
+	<Grid>
+		<Border Width="350"
+                Padding="28"
                 Background="White"
+                CornerRadius="14"
                 VerticalAlignment="Center"
                 HorizontalAlignment="Center">
 
+			<!-- Shadow -->
+			<Border.Effect>
+				<DropShadowEffect BlurRadius="15"
+                                  ShadowDepth="2"
+                                  Opacity="0.2"/>
+			</Border.Effect>
+
 			<StackPanel>
 
-				<TextBlock Text="ĐĂNG KÝ"
-                           FontSize="22"
+				<!-- Title -->
+				<TextBlock Text="REGISTER"
+                           FontSize="24"
                            FontWeight="Bold"
                            Foreground="#2C3E50"
                            HorizontalAlignment="Center"
-                           Margin="0,0,0,20"/>
-    
-				<TextBlock Text="Tên đăng nhập"/>
-				<TextBox x:Name="txtUsername"
-                         Height="32"
-                         Margin="0,5,0,10"/>
+                           Margin="0,0,0,25"/>
 
-				<TextBlock Text="Mật khẩu"/>
-				<PasswordBox x:Name="txtPassword"
-                             Height="32"
-                             Margin="0,5,0,10"/>
+				<!-- Full Name -->
+				<TextBlock Text="Full Name"
+                           Foreground="#7F8C8D"
+                           FontSize="12"/>
+				<TextBox Height="38"
+                         Margin="0,6,0,14"
+                         Padding="10"
+                         BorderBrush="#DADADA"
+                         BorderThickness="1"
+                         Background="#FAFAFA"/>
 
-				<TextBlock Text="Xác nhận mật khẩu"/>
-				<PasswordBox x:Name="txtConfirmPassword"
-                             Height="32"
-                             Margin="0,5,0,10"/>
+				<!-- Email -->
+				<TextBlock Text="Email"
+                           Foreground="#7F8C8D"
+                           FontSize="12"/>
+				<TextBox Height="38"
+                         Margin="0,6,0,14"
+                         Padding="10"
+                         BorderBrush="#DADADA"
+                         BorderThickness="1"
+                         Background="#FAFAFA"/>
 
-				<TextBlock Text="Vai trò"/>
-				<ComboBox x:Name="cbRole"
-                          Height="32"
-                          Margin="0,5,0,20">
-					<ComboBoxItem Content="Nhân viên"/>
-					<ComboBoxItem Content="Quản lý"/>
-				</ComboBox>
+				<!-- Password -->
+				<TextBlock Text="Password"
+                           Foreground="#7F8C8D"
+                           FontSize="12"/>
+				<PasswordBox Height="38"
+                             Margin="0,6,0,14"
+                             Padding="10"
+                             BorderBrush="#DADADA"
+                             BorderThickness="1"
+                             Background="#FAFAFA"/>
 
-				<Button Content="ĐĂNG KÝ"
-                        Height="40"
-                        Background="#3498DB"
+				<!-- Confirm Password -->
+				<TextBlock Text="Confirm Password"
+                           Foreground="#7F8C8D"
+                           FontSize="12"/>
+				<PasswordBox Height="38"
+                             Margin="0,6,0,22"
+                             Padding="10"
+                             BorderBrush="#DADADA"
+                             BorderThickness="1"
+                             Background="#FAFAFA"/>
+
+				<!-- Register Button -->
+				<Button Content="REGISTER"
+                        Height="42"
+                        Background="#27AE60"
                         Foreground="White"
                         FontWeight="Bold"
-                        Cursor="Hand"
-                        Click="BtnDangKy_Click"/>
+                        FontSize="14"
+                        BorderThickness="0"
+                        Cursor="Hand"/>
 
-				<TextBlock Text="Đã có tài khoản? Đăng nhập"
-                           Foreground="#3498DB"
-                           Margin="0,15,0,0"
-                           Cursor="Hand"
-                           HorizontalAlignment="Center"
-                           MouseDown="TxtBackToLogin_MouseDown"/>
+				<!-- Login text -->
+				<TextBlock HorizontalAlignment="Center"
+                           Margin="0,18,0,0"
+                           FontSize="12">
+					<Run Text="Already have an account? "/>
+					<Run Text="Login"
+                         Foreground="#3498DB"
+                         FontWeight="SemiBold"/>
+				</TextBlock>
+
 			</StackPanel>
 		</Border>
 	</Grid>
