@@ -94,7 +94,6 @@
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.1"/>
                 </Border.Effect>
-
                 <StackPanel Margin="0,20,0,0">
                     <TextBlock Text="MENU" 
                                FontSize="18" 
@@ -111,8 +110,7 @@
                             BorderThickness="0" 
                             FontSize="14" 
                             FontWeight="SemiBold" 
-                            HorizontalContentAlignment="Left" 
-                            Padding="20,0" 
+                            HorizontalContentAlignment="Center" 
                             Cursor="Hand"
                             Click="btnPayment_Click">
                         <Button.Style>
@@ -146,8 +144,7 @@
                             BorderThickness="0" 
                             FontSize="14" 
                             FontWeight="SemiBold" 
-                            HorizontalContentAlignment="Left" 
-                            Padding="20,0" 
+                            HorizontalContentAlignment="Center" 
                             Cursor="Hand"
                             Click="btnOrderManagement_Click">
                         <Button.Style>
@@ -181,8 +178,7 @@
                             BorderThickness="0" 
                             FontSize="14" 
                             FontWeight="SemiBold" 
-                            HorizontalContentAlignment="Left" 
-                            Padding="20,0" 
+                            HorizontalContentAlignment="Center" 
                             Cursor="Hand"
                             Click="btnProductManagement_Click">
                         <Button.Style>
@@ -211,25 +207,32 @@
 
             <!-- Content Area -->
             <Border Grid.Column="1" 
-                    Background="White" 
-                    CornerRadius="10">
+                 Background="White" 
+                CornerRadius="10">
                 <Border.Effect>
                     <DropShadowEffect BlurRadius="10" ShadowDepth="0" Opacity="0.1"/>
                 </Border.Effect>
 
                 <Grid>
-                    <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center">
+                    <!-- Default Welcome Screen -->
+                    <StackPanel x:Name="WelcomePanel" 
+                    VerticalAlignment="Center" 
+                    HorizontalAlignment="Center">
                         <TextBlock Text="Welcome to Store Management System" 
-                                   FontSize="28" 
-                                   FontWeight="Bold" 
-                                   Foreground="#2C3E50" 
-                                   TextAlignment="Center"/>
+                       FontSize="28" 
+                       FontWeight="Bold" 
+                       Foreground="#2C3E50" 
+                       TextAlignment="Center"/>
                         <TextBlock Text="Please select a function from the menu" 
-                                   FontSize="16" 
-                                   Foreground="#7F8C8D" 
-                                   TextAlignment="Center" 
-                                   Margin="0,10,0,0"/>
+                       FontSize="16" 
+                       Foreground="#7F8C8D" 
+                       TextAlignment="Center" 
+                       Margin="0,10,0,0"/>
                     </StackPanel>
+
+                    <!-- Content Host -->
+                    <ContentControl x:Name="MainContentControl" 
+                        Visibility="Collapsed"/>
                 </Grid>
             </Border>
         </Grid>

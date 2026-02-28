@@ -6,7 +6,7 @@ using System.Windows.Controls;
 
 namespace QuanLyCuaHang
 {
-    public partial class ThanhToan : Window
+    public partial class ThanhToan : UserControl
     {
         private List<ChiTietHoaDon> danhSachMuaHang = new List<ChiTietHoaDon>();
         private List<SanPham> danhSachSanPham = new List<SanPham>();
@@ -26,30 +26,32 @@ namespace QuanLyCuaHang
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi t?i danh sách s?n ph?m: " + ex.Message, "L?i", 
+                MessageBox.Show("Error loading products: " + ex.Message, "Error", 
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }
 
         private void btnThemSanPham_Click(object sender, RoutedEventArgs e)
         {
-            // T?o window ch?n s?n ph?m
+            // Create product selection window
             var windowChonSP = new Window
             {
-                Title = "Ch?n S?n Ph?m",
+                Title = "Select Product",
                 Width = 500,
                 Height = 400,
                 WindowStartupLocation = WindowStartupLocation.CenterOwner,
-                Owner = this
+                Owner = Window.GetWindow(this)
             };
 
             var grid = new Grid { Margin = new Thickness(10) };
             grid.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
             grid.RowDefinitions.Add(new RowDefinition { Height = GridLength.Auto });
 
+            // Create ListView with template
             var listView = new ListView { Margin = new Thickness(0, 0, 0, 10) };
-            listView.ItemTemplate = (DataTemplate)this.FindResource("SanPhamItemTemplate") ?? CreateSanPhamTemplate();
+            listView.ItemTemplate = CreateSanPhamTemplate();
             listView.ItemsSource = danhSachSanPham;
+            
             listView.MouseDoubleClick += (s, args) =>
             {
                 if (listView.SelectedItem is SanPham sp)
@@ -61,7 +63,7 @@ namespace QuanLyCuaHang
 
             var btnChon = new Button
             {
-                Content = "Ch?n",
+                Content = "Select",
                 Width = 100,
                 Height = 35,
                 HorizontalAlignment = HorizontalAlignment.Right
@@ -72,6 +74,11 @@ namespace QuanLyCuaHang
                 {
                     ThemSanPhamVaoGio(sp);
                     windowChonSP.Close();
+                }
+                else
+                {
+                    MessageBox.Show("Please select a product!", "Warning", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
                 }
             };
 
@@ -88,18 +95,28 @@ namespace QuanLyCuaHang
         {
             var template = new DataTemplate();
             var factory = new FrameworkElementFactory(typeof(StackPanel));
+            factory.SetValue(StackPanel.MarginProperty, new Thickness(5));
             
             var txtTen = new FrameworkElementFactory(typeof(TextBlock));
             txtTen.SetValue(TextBlock.FontWeightProperty, System.Windows.FontWeights.SemiBold);
+            txtTen.SetValue(TextBlock.FontSizeProperty, 14.0);
             txtTen.SetBinding(TextBlock.TextProperty, new System.Windows.Data.Binding("TenSP"));
             
             var txtGia = new FrameworkElementFactory(typeof(TextBlock));
             txtGia.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.Gray);
+            txtGia.SetValue(TextBlock.FontSizeProperty, 12.0);
             txtGia.SetBinding(TextBlock.TextProperty, 
-                new System.Windows.Data.Binding("GiaBan") { StringFormat = "Giá: {0:N0} VN?" });
+                new System.Windows.Data.Binding("GiaBan") { StringFormat = "Price: ${0:N2}" });
+            
+            var txtSoLuong = new FrameworkElementFactory(typeof(TextBlock));
+            txtSoLuong.SetValue(TextBlock.ForegroundProperty, System.Windows.Media.Brushes.DarkGreen);
+            txtSoLuong.SetValue(TextBlock.FontSizeProperty, 11.0);
+            txtSoLuong.SetBinding(TextBlock.TextProperty, 
+                new System.Windows.Data.Binding("SoLuongTon") { StringFormat = "In stock: {0}" });
             
             factory.AppendChild(txtTen);
             factory.AppendChild(txtGia);
+            factory.AppendChild(txtSoLuong);
             template.VisualTree = factory;
             
             return template;
@@ -107,10 +124,25 @@ namespace QuanLyCuaHang
 
         private void ThemSanPhamVaoGio(SanPham sp)
         {
+            // Check stock
+            if (sp.SoLuongTon <= 0)
+            {
+                MessageBox.Show("This product is out of stock!", "Warning", 
+                    MessageBoxButton.OK, MessageBoxImage.Warning);
+                return;
+            }
+
             var existingItem = danhSachMuaHang.FirstOrDefault(x => x.MaSP == sp.MaSP);
             
             if (existingItem != null)
             {
+                // Check if adding more exceeds stock
+                if (existingItem.SoLuong + 1 > sp.SoLuongTon)
+                {
+                    MessageBox.Show($"Not enough stock! Available: {sp.SoLuongTon}", "Warning", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
                 existingItem.SoLuong++;
             }
             else
@@ -126,6 +158,15 @@ namespace QuanLyCuaHang
         {
             if (sender is Button btn && btn.Tag is ChiTietHoaDon item)
             {
+                // Check stock before increasing
+                var sanPham = danhSachSanPham.FirstOrDefault(x => x.MaSP == item.MaSP);
+                if (sanPham != null && item.SoLuong + 1 > sanPham.SoLuongTon)
+                {
+                    MessageBox.Show($"Not enough stock! Available: {sanPham.SoLuongTon}", "Warning", 
+                        MessageBoxButton.OK, MessageBoxImage.Warning);
+                    return;
+                }
+
                 item.SoLuong++;
                 CapNhatDanhSachHienThi();
                 CapNhatTongTien();
@@ -159,7 +200,7 @@ namespace QuanLyCuaHang
         private void CapNhatTongTien()
         {
             decimal tongTien = danhSachMuaHang.Sum(x => x.ThanhTien);
-            txtTongTien.Text = tongTien.ToString("N0");
+            txtTongTien.Text = tongTien.ToString("N2");
             TinhTienThua();
         }
 
@@ -175,7 +216,7 @@ namespace QuanLyCuaHang
                 if (txtTienKhachDua != null)
                     txtTienKhachDua.IsEnabled = false;
                 if (txtTienThua != null)
-                    txtTienThua.Text = "0";
+                    txtTienThua.Text = "0.00";
             }
             else
             {
@@ -192,7 +233,7 @@ namespace QuanLyCuaHang
 
             if (rdChuyenKhoan?.IsChecked == true)
             {
-                txtTienThua.Text = "0";
+                txtTienThua.Text = "0.00";
                 return;
             }
 
@@ -200,11 +241,11 @@ namespace QuanLyCuaHang
                 decimal.TryParse(txtTienKhachDua.Text.Replace(",", ""), out decimal tienKhachDua))
             {
                 decimal tienThua = tienKhachDua - tongTien;
-                txtTienThua.Text = tienThua >= 0 ? tienThua.ToString("N0") : "0";
+                txtTienThua.Text = tienThua >= 0 ? tienThua.ToString("N2") : "0.00";
             }
             else
             {
-                txtTienThua.Text = "0";
+                txtTienThua.Text = "0.00";
             }
         }
 
@@ -212,17 +253,17 @@ namespace QuanLyCuaHang
         {
             if (danhSachMuaHang.Count == 0)
             {
-                MessageBox.Show("Vui lòng thêm s?n ph?m vào gi? hàng!", "Thông báo", 
+                MessageBox.Show("Please add products to cart!", "Warning",
                     MessageBoxButton.OK, MessageBoxImage.Warning);
                 return;
             }
 
             if (rdTienMat.IsChecked == true)
             {
-                if (string.IsNullOrWhiteSpace(txtTienKhachDua.Text) || 
+                if (string.IsNullOrWhiteSpace(txtTienKhachDua.Text) ||
                     !decimal.TryParse(txtTienKhachDua.Text.Replace(",", ""), out decimal tienKhachDua))
                 {
-                    MessageBox.Show("Vui lòng nh?p ti?n khách ??a!", "Thông báo", 
+                    MessageBox.Show("Please enter cash received!", "Warning",
                         MessageBoxButton.OK, MessageBoxImage.Warning);
                     return;
                 }
@@ -231,7 +272,7 @@ namespace QuanLyCuaHang
                 {
                     if (tienKhachDua < tongTien)
                     {
-                        MessageBox.Show("Ti?n khách ??a không ??!", "Thông báo", 
+                        MessageBox.Show("Cash received is not enough!", "Warning",
                             MessageBoxButton.OK, MessageBoxImage.Warning);
                         return;
                     }
@@ -240,41 +281,40 @@ namespace QuanLyCuaHang
 
             try
             {
-                // T?o hóa ??n
                 HoaDon hoaDon = new HoaDon
                 {
                     MaHoaDon = DatabaseHelper.TaoMaHoaDon(),
-                    KhachHang = string.IsNullOrWhiteSpace(txtHoTen.Text) ? "Khách l?" : txtHoTen.Text,
+                    KhachHang = string.IsNullOrWhiteSpace(txtHoTen.Text) ? "Guest" : txtHoTen.Text,
                     SoDienThoai = txtSDT.Text,
                     DiaChi = txtDiaChi.Text,
                     NgayLap = DateTime.Now,
                     TongTien = double.Parse(txtTongTien.Text.Replace(",", "")),
-                    HinhThucThanhToan = rdTienMat.IsChecked == true ? "Ti?n m?t" : "Chuy?n kho?n",
-                    TienKhachDua = string.IsNullOrWhiteSpace(txtTienKhachDua.Text) ? 0 : 
+                    HinhThucThanhToan = rdTienMat.IsChecked == true ? "Cash" : "Credit Card",
+                    TienKhachDua = string.IsNullOrWhiteSpace(txtTienKhachDua.Text) ? 0 :
                         double.Parse(txtTienKhachDua.Text.Replace(",", "")),
                     TienThua = double.Parse(txtTienThua.Text.Replace(",", ""))
                 };
 
-                // L?u vào database
                 int maHD = DatabaseHelper.LuuHoaDon(hoaDon);
                 DatabaseHelper.LuuChiTietHoaDon(maHD, danhSachMuaHang);
 
-                MessageBox.Show($"Xu?t hóa ??n thành công!\nMã hóa ??n: {hoaDon.MaHoaDon}", 
-                    "Thành công", MessageBoxButton.OK, MessageBoxImage.Information);
+                MessageBox.Show($"Checkout successful!\nOrder ID: {hoaDon.MaHoaDon}",
+                    "Success", MessageBoxButton.OK, MessageBoxImage.Information);
 
-                // Reset form
+                // Clear the cart after successful checkout
                 danhSachMuaHang.Clear();
                 CapNhatDanhSachHienThi();
                 CapNhatTongTien();
+                
+                // Clear customer information
                 txtHoTen.Clear();
                 txtSDT.Clear();
                 txtDiaChi.Clear();
                 txtTienKhachDua.Clear();
-                rdTienMat.IsChecked = true;
             }
             catch (Exception ex)
             {
-                MessageBox.Show("L?i khi xu?t hóa ??n: " + ex.Message, "L?i", 
+                MessageBox.Show("Checkout error: " + ex.Message, "Error",
                     MessageBoxButton.OK, MessageBoxImage.Error);
             }
         }

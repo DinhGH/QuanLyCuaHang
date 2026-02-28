@@ -1,6 +1,6 @@
-﻿using System.Windows;
-using QuanLyCuaHang.Models;
-using QuanLyCuaHang.Services;
+﻿using System;
+using System.Windows;
+using System.Windows.Input;
 
 namespace QuanLyCuaHang
 {
@@ -11,114 +11,109 @@ namespace QuanLyCuaHang
         public Login()
         {
             InitializeComponent();
-            this.WindowStartupLocation = WindowStartupLocation.CenterScreen;
-            btnLogin.Click += BtnLogin_Click;
-            btnRegister.Click += BtnRegister_Click;
-            btnTogglePassword.Click += BtnTogglePassword_Click;
-            txtPasswordVisible.TextChanged += TxtPasswordVisible_TextChanged;
+            txtUsername.Focus();
         }
 
-        /// <summary>
-        /// Xử lý nút toggle hiển thị/ẩn mật khẩu
-        /// </summary>
-        private void BtnTogglePassword_Click(object sender, RoutedEventArgs e)
+        private void btnLogin_Click(object sender, RoutedEventArgs e)
+        {
+            PerformLogin();
+        }
+
+        private void txtPassword_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformLogin();
+            }
+        }
+
+        private void txtPasswordVisible_KeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                PerformLogin();
+            }
+        }
+
+        private void btnTogglePassword_Click(object sender, RoutedEventArgs e)
         {
             isPasswordVisible = !isPasswordVisible;
 
             if (isPasswordVisible)
             {
-                // Hiển thị mật khẩu
+                // Show password - icon shows "hide" state
                 txtPasswordVisible.Text = txtPassword.Password;
-                txtPassword.Visibility = Visibility.Collapsed;
                 txtPasswordVisible.Visibility = Visibility.Visible;
-                eyeIcon.Text = "🙈";
+                txtPassword.Visibility = Visibility.Collapsed;
+                txtToggleIcon.Text = "🙈"; // Eye closed - click to hide
+                txtPasswordVisible.Focus();
+                txtPasswordVisible.SelectionStart = txtPasswordVisible.Text.Length;
             }
             else
             {
-                // Ẩn mật khẩu
+                // Hide password - icon shows "show" state
                 txtPassword.Password = txtPasswordVisible.Text;
                 txtPassword.Visibility = Visibility.Visible;
                 txtPasswordVisible.Visibility = Visibility.Collapsed;
-                eyeIcon.Text = "👁";
+                txtToggleIcon.Text = "👁"; // Eye open - click to show
+                txtPassword.Focus();
             }
         }
 
-        /// <summary>
-        /// Đồng bộ text từ TextBox hiển thị sang PasswordBox
-        /// </summary>
-        private void TxtPasswordVisible_TextChanged(object sender, System.Windows.Controls.TextChangedEventArgs e)
+        private void btnRegister_Click(object sender, RoutedEventArgs e)
         {
-            if (isPasswordVisible)
-            {
-                txtPassword.Password = txtPasswordVisible.Text;
-            }
+            Register registerWindow = new Register();
+            registerWindow.Show();
+            this.Close();
         }
 
-        private void BtnLogin_Click(object sender, RoutedEventArgs e)
+        private void PerformLogin()
         {
-            string email = txtUsername.Text.Trim();
+            string username = txtUsername.Text.Trim();
             string password = isPasswordVisible ? txtPasswordVisible.Text : txtPassword.Password;
 
-            // Validate dữ liệu đầu vào
-            if (string.IsNullOrWhiteSpace(email))
+            if (string.IsNullOrEmpty(username) || string.IsNullOrEmpty(password))
             {
-                HienThiBaoLoi("Vui lòng nhập email");
-                txtUsername.Focus();
+                ShowError("Please enter email and password!");
                 return;
             }
 
-            if (string.IsNullOrWhiteSpace(password))
+            try
             {
-                HienThiBaoLoi("Vui lòng nhập mật khẩu");
-                if (isPasswordVisible)
-                    txtPasswordVisible.Focus();
+                // Validate login from database
+                var employee = DatabaseHelper.ValidateLogin(username, password);
+
+                if (employee != null)
+                {
+                    // Login successful
+                    MainWindow mainWindow = new MainWindow(employee);
+                    mainWindow.Show();
+                    this.Close();
+                }
                 else
-                    txtPassword.Focus();
-                return;
+                {
+                    ShowError("Invalid email or password!");
+                    if (isPasswordVisible)
+                    {
+                        txtPasswordVisible.Clear();
+                    }
+                    else
+                    {
+                        txtPassword.Clear();
+                    }
+                    txtUsername.Focus();
+                }
             }
-
-            // Xác thực đăng nhập từ database
-            User user = AuthService.Login(email, password);
-
-            if (user != null)
+            catch (Exception ex)
             {
-                AnBaoLoi();
-
-                // Lưu thông tin người dùng hiện tại
-                App.CurrentUser = user;
-
-                // Mở cửa sổ chính
-                QuanLyHoaDon mainWindow = new QuanLyHoaDon();
-                mainWindow.Show();
-
-                this.Close();
-            }
-            else
-            {
-                HienThiBaoLoi("Email hoặc mật khẩu không đúng");
-                if (isPasswordVisible)
-                    txtPasswordVisible.Clear();
-                else
-                    txtPassword.Clear();
-                txtUsername.Focus();
+                ShowError("Login error: " + ex.Message);
             }
         }
 
-        private void BtnRegister_Click(object sender, RoutedEventArgs e)
-        {
-            MessageBox.Show("Chức năng đăng ký chưa được phát triển", "Thông báo", MessageBoxButton.OK, MessageBoxImage.Information);
-        }
-
-        private void HienThiBaoLoi(string message)
+        private void ShowError(string message)
         {
             lblError.Text = message;
             lblError.Visibility = Visibility.Visible;
-        }
-
-        private void AnBaoLoi()
-        {
-            lblError.Visibility = Visibility.Collapsed;
-            lblError.Text = "";
         }
     }
 }

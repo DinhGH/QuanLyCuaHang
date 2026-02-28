@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Threading;
 
 namespace QuanLyCuaHang
@@ -39,44 +40,24 @@ namespace QuanLyCuaHang
 
         private void btnPayment_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                ThanhToan paymentWindow = new ThanhToan();
-                paymentWindow.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error opening Payment window: " + ex.Message, "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            LoadContent(new ThanhToan());
         }
 
         private void btnOrderManagement_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                QuanLyHoaDon orderWindow = new QuanLyHoaDon();
-                orderWindow.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error opening Order Management window: " + ex.Message, "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            LoadContent(new QuanLyHoaDon());
         }
 
         private void btnProductManagement_Click(object sender, RoutedEventArgs e)
         {
-            try
-            {
-                QuanLySanPham productWindow = new QuanLySanPham();
-                productWindow.ShowDialog();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error opening Product Management window: " + ex.Message, "Error",
-                    MessageBoxButton.OK, MessageBoxImage.Error);
-            }
+            LoadContent(new QuanLySanPham());
+        }
+
+        private void LoadContent(UserControl userControl)
+        {
+            WelcomePanel.Visibility = Visibility.Collapsed;
+            MainContentControl.Visibility = Visibility.Visible;
+            MainContentControl.Content = userControl;
         }
 
         private void btnLogout_Click(object sender, RoutedEventArgs e)

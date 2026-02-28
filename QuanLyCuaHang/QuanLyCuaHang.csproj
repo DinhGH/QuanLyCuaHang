@@ -81,6 +81,15 @@
       <SubType>Designer</SubType>
     </ApplicationDefinition>
     <Compile Include="Behaviors\PasswordBoxBehavior.cs" />
+    <Compile Include="ChiTietHoaDonWindow.xaml.cs">
+      <DependentUpon>ChiTietHoaDonWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="ProductEditWindow.xaml.cs">
+      <DependentUpon>ProductEditWindow.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Register.xaml.cs">
+      <DependentUpon>Register.xaml</DependentUpon>
+    </Compile>
     <Compile Include="Services\AuthService.cs" />
     <Compile Include="ChiTietHoaDon.cs" />
     <Compile Include="DatabaseHelper.cs" />
@@ -89,6 +98,10 @@
     <Compile Include="ThanhToan.xaml.cs">
       <DependentUpon>ThanhToan.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ViewModels.cs" />
+    <Page Include="ChiTietHoaDonWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="Login.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -117,12 +130,18 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ProductEditWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="QuanLyHoaDon.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="QuanLySanPham.xaml">
       <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Register.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="ThanhToan.xaml">
