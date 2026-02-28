@@ -38,6 +38,11 @@ namespace QuanLyCuaHang
             txtDateTime.Text = DateTime.Now.ToString("dddd, MMMM dd, yyyy - HH:mm:ss");
         }
 
+        private void btnDashboard_Click(object sender, RoutedEventArgs e)
+        {
+            LoadContent(new Dashboard());
+        }
+
         private void btnPayment_Click(object sender, RoutedEventArgs e)
         {
             LoadContent(new ThanhToan());

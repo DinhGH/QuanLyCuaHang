@@ -84,6 +84,9 @@
     <Compile Include="ChiTietHoaDonWindow.xaml.cs">
       <DependentUpon>ChiTietHoaDonWindow.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Dashboard.xaml.cs">
+      <DependentUpon>Dashboard.xaml</DependentUpon>
+    </Compile>
     <Compile Include="ProductEditWindow.xaml.cs">
       <DependentUpon>ProductEditWindow.xaml</DependentUpon>
     </Compile>
@@ -100,6 +103,9 @@
     </Compile>
     <Compile Include="ViewModels.cs" />
     <Page Include="ChiTietHoaDonWindow.xaml">
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="Dashboard.xaml">
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="Login.xaml">
